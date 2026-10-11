@@ -183,6 +183,35 @@ weather_df |>
   geom_density(alpha = .3)
 ```
 
+What about box plots? 
 
+```{r}
+weather_df |> 
+  ggplot(aes(y = tmin)) + 
+  geom_boxplot()
+```
 
+```{r}
+weather_df |> 
+  ggplot(aes(x = name, y = tmin)) + 
+  geom_boxplot()
+```
+
+Trendy plots
+
+Violin Plot
+```{r}
+weather_df |> 
+  ggplot(aes(x = name, y = tmin, fill = name)) + 
+  geom_violin(alpha = .5) +
+  stat_summary(fun = "median")
+```
+
+Ridge plots (most popular plot of 2017)
+
+```{r}
+weather_df |> 
+  ggplot(aes(x = tmin, y = name)) +
+  geom_density_ridges()
+```
 
