@@ -215,3 +215,101 @@ weather_df |>
   geom_density_ridges()
 ```
 
+## Save and Embed Plots
+
+Save a scatterplot 
+
+```{r}
+weather_plot = 
+  weather_df |> 
+  ggplot(aes(x = tmin, y = tmax, color = name)) + 
+  geom_point(alpha = .5)
+
+ggsave("./results/weather_plot.pdf", weather_plot, width = 8, height = 5)
+```
+
+What about embedding... 
+
+```{r, fig.width=6, fig.height=3}
+weather_plot
+```
+
+Embed at different size 
+
+```{r, fig.width=12, fig.height=6}
+weather_plot
+```
+
+## Learning Assessments
+
+Learning assessment 1
+Write a code chain that starts with weather_df;focuses only on Central Park, converts temperatures to Fahrenheit, makes a scatterplot of min vs. max temperature, and overlays a linear regression line (using options in geom_smooth()). 
+
+```{r}
+weather_df |> 
+  filter(name == "CentralPark_NY") |> 
+  mutate(
+    tmax_fahr = tmax * (9/5) + 32,
+    tmin_fahr = tmax * (9/5) + 32) |> 
+  ggplot(aes(x = tmin_fahr, y = tmax_fahr)) + 
+  geom_point(alpha = .5) +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+Looks like there’s a pretty linear relationship between min and max temperatures in Central Park. 
+
+
+Learning assessment 2
+In the preceding, we set the alpha aesthetic “by hand” instead of mapping it to a variable. This is possible for other aesthetics too. To check your understanding of this point, try to explain why the two lines below don’t produce the same result:
+
+```{r}
+weather_df |> ggplot() + geom_point(aes(x = tmax, y = tmin), color = "blue")
+weather_df |> ggplot() + geom_point(aes(x = tmax, y = tmin, color = "blue"))
+```
+
+First attempt: color = "blue" outside aes() 
+Produces blue coloured points. In the first attempt, we’re defining the color of the points by hand. 
+
+Second attempt: color = "blue" iside aes() 
+Produces red coloured points. In the second attempt, we’re implicitly creating a color variable that has the value blue everywhere ggplot is then assigning colors according to this variable using the default color scheme.
+
+Learning assessment 3
+Make plots that compare precipitation across locations. Try a histogram, a density plot, a boxplot, a violin plot, and a ridgeplot; use aesthetic mappings to make your figure readable.
+
+a) Density plot
+
+```{r}
+weather_df |> 
+  ggplot(aes(x = prcp)) +
+  geom_density(aes(fill = name), alpha = .5)
+```
+
+b) Ridge plot
+
+```{r}
+weather_df |> 
+  ggplot(aes(x = prcp, y = name)) +
+  geom_density_ridges(scale = .85)
+```
+
+c) Boxplot
+
+```{r}
+weather_df |> 
+  ggplot(aes(y = prcp, x = name)) +
+  geom_boxplot()
+```
+
+This is a tough variable to plot because of the highly skewed distribution in each location. Of these, I’d probably choose the boxplot because it shows the outliers most clearly. If the “bulk” of the data were interesting, I’d probably compliment this with a plot showing data for all precipitation less than 100, or for a data omitting days with no precipitation.
+
+```{r}
+weather_df |> 
+  filter(prcp > 0) |> 
+  ggplot(aes(x = prcp, y = name)) +
+  geom_density_ridges(scale = .85)
+```
+
+
+Learning assessment 4
+Set global options for your figure sizes in the “setup” code chunk and re-knit your document. What happens when you change fig.asp? What about out.width? 
+
