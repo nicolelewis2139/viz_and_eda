@@ -19,3 +19,4 @@ Now we have everything we need!
 weather_df
 ```
 
+Let's make a scatterplot!
