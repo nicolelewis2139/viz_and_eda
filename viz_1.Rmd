@@ -46,6 +46,143 @@ weather_plot
 weather_plot + geom_point()
 ```
 
+## Advanced scatterplots 
+
+Start with the same one and make it fancy 
+
+```{r}
+weather_df |> 
+  ggplot(aes(x = tmin, y = tmax, colour = name)) + 
+  geom_point() + 
+  geom_smooth(se = FALSE)
+```
+
+What about the `aes` placement?
+
+```{r}
+weather_df |> 
+  ggplot(aes(x = tmin, y = tmax)) + 
+  geom_point(aes(color = name)) 
+```
+
+^Ends up looking the same 
+
+Where this starts to make a difference.. 
+```{r}
+weather_df |> 
+  ggplot(aes(x = tmin, y = tmax)) + 
+  geom_point(aes(color = name)) + 
+  geom_smooth()
+```
+Now you only have a single blue line running through all of data. 
+Because color applies only to the scatterplot, not the line bc not defined in the geom_smooth
+
+Lets facet some things!
+
+```{r}
+weather_df |> 
+  ggplot(aes(x = tmin, y = tmax, colour = name)) + 
+  geom_point(alpha = .2) + 
+  geom_smooth(se = FALSE) +
+  facet_grid(. ~ name)
+```
+
+Lets combine some elements and try a new plot 
+
+```{r}
+weather_df |> 
+  ggplot(aes(x = date, y = tmax, color = name)) + 
+  geom_point(aes(size = prcp), alpha = .5) +
+  geom_smooth(se = FALSE) +
+  facet_grid(. ~ name)
+```
+
+
+## Some small notes
+
+How many geoms have to exist? 
+
+You can have whatever geoms you want. 
+
+```{r}
+weather_df |> 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_smooth(se = FALSE)
+```
+
+Gives only smooth geometry 
+^This is not the most useful plot though
+
+You can use a neat geom! 
+
+`geom_hex()`
+```{r}
+library(hexbin)
+weather_df |> 
+  ggplot(aes(x = tmin, y = tmax)) +
+  geom_hex()
+```
+
+`geom_bin2d()`
+```{r}
+weather_df |> 
+  ggplot(aes(x = tmin, y = tmax)) +
+  geom_bin2d()
+```
+
+` geom_density2d()`
+```{r}
+weather_df |> 
+  ggplot(aes(x = tmin, y = tmax)) +
+  geom_density2d() + 
+  geom_point(alpha = .3)
+```
+
+
+## Univariate plots
+
+Histograms 
+
+```{r}
+weather_df |> 
+  ggplot(aes(x = tmin)) + 
+  geom_histogram()
+```
+
+Can we add color .. 
+
+```{r}
+weather_df |> 
+  ggplot(aes(x = tmin, color = name)) + 
+  geom_histogram()
+```
+
+Not so great^
+So.. 
+
+```{r}
+weather_df |> 
+  ggplot(aes(x = tmin, fill = name)) + 
+  geom_histogram(position = "dodge")
+```
+^bars are hard to see 
+
+```{r}
+weather_df |> 
+  ggplot(aes(x = tmin)) + 
+  geom_histogram() +
+  facet_grid(. ~ name)
+```
+^hard to compare groups 
+
+Lets try a new geometry 
+
+```{r}
+weather_df |> 
+  ggplot(aes(x = tmin, fill = name)) +
+  geom_density(alpha = .3)
+```
+
 
 
 
