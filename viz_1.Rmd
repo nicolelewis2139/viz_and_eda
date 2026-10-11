@@ -19,4 +19,33 @@ Now we have everything we need!
 weather_df
 ```
 
-Let's make a scatterplot!
+## Scatterplots 
+
+Create my first scatterplot.
+
+```{r}
+ggplot(weather_df, aes(x = tmin, y = tmax)) + 
+  geom_point()
+```
+
+New approach, same plot
+
+```{r}
+weather_df |> 
+  ggplot(aes(x = tmin, y = tmax)) + 
+  geom_point()
+```
+
+Save and edit plot objects. 
+
+```{r}
+weather_plot = 
+  weather_df |> 
+  ggplot(aes(x = tmin, y = tmax))
+weather_plot
+weather_plot + geom_point()
+```
+
+
+
+
