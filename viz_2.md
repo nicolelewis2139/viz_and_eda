@@ -146,6 +146,8 @@ weather_df |>
 
 ![](viz_2_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
+Viridis package:
+
 ``` r
 weather_df |> 
   ggplot(aes(x = tmin, y = tmax)) + 
@@ -165,3 +167,55 @@ weather_df |>
     ## (`geom_point()`).
 
 ![](viz_2_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+## Themes
+
+Themes are used to modify non-data elements of a plot (ie. controls
+things like background color and location of the the legend)
+
+Shift the legend
+
+``` r
+weather_df |> 
+  ggplot(aes(x = tmin, y = tmax)) + 
+  geom_point(aes(color = name), alpha = .5) +
+  labs(
+    title = "Temperature plot",
+    x = "Minimum daily temperature (C)",
+    y = "Maximum daily temperature (C)", 
+    caption = "Data from the rnoaa package; temperatures in 2017."
+  ) +
+ viridis:: scale_color_viridis(
+   name = "Location",
+   discrete = TRUE) +
+  theme(legend.position = "bottom")
+```
+
+    ## Warning: Removed 17 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+![](viz_2_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+Change the overall theme
+
+``` r
+weather_df |> 
+  ggplot(aes(x = tmin, y = tmax)) + 
+  geom_point(aes(color = name), alpha = .5) +
+  labs(
+    title = "Temperature plot",
+    x = "Minimum daily temperature (C)",
+    y = "Maximum daily temperature (C)", 
+    caption = "Data from the rnoaa package; temperatures in 2017."
+  ) +
+ viridis:: scale_color_viridis(
+   name = "Location",
+   discrete = TRUE) +
+  theme_minimal() + 
+  theme(legend.position = "bottom")
+```
+
+    ## Warning: Removed 17 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+![](viz_2_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
