@@ -149,6 +149,7 @@ weather_df |>
 Viridis package:
 
 ``` r
+ggp_temp_plot = 
 weather_df |> 
   ggplot(aes(x = tmin, y = tmax)) + 
   geom_point(aes(color = name), alpha = .5) +
@@ -162,11 +163,6 @@ weather_df |>
    name = "Location",
    discrete = TRUE)
 ```
-
-    ## Warning: Removed 17 rows containing missing values or values outside the scale range
-    ## (`geom_point()`).
-
-![](viz_2_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ## Themes
 
@@ -219,3 +215,37 @@ weather_df |>
     ## (`geom_point()`).
 
 ![](viz_2_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+``` r
+ggp_temp_plot +
+  theme(legend.position = "bottom")
+```
+
+    ## Warning: Removed 17 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+![](viz_2_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+``` r
+ggp_temp_plot +
+  theme_bw() +
+  theme(legend.position = "bottom")
+```
+
+    ## Warning: Removed 17 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+![](viz_2_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+``` r
+ggp_temp_plot +
+  theme_classic() +
+  theme(legend.position = "bottom")
+```
+
+    ## Warning: Removed 17 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+![](viz_2_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
+## Setting options
