@@ -290,3 +290,105 @@ ggplot(data = molokai_df, aes(x = date, y = tmax, color = name)) +
     ## (`geom_point()`).
 
 ![](viz_2_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+
+## `patchwork`
+
+Remember faceting?
+
+``` r
+weather_df |> 
+  ggplot(aes(x = tmin, fill = name)) + 
+  geom_density(alpha = .5) +
+facet_grid(. ~ name)
+```
+
+    ## Warning: Removed 17 rows containing non-finite outside the scale range
+    ## (`stat_density()`).
+
+![](viz_2_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+
+What happens when you want multipanel plots but can’t facet?
+
+``` r
+tmax_tmin_p = 
+  weather_df |> 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = .5) +
+  theme(legend.position = "none")
+
+prcp_dens_p = 
+  weather_df |> 
+  filter(prcp > 0) |> 
+  ggplot(aes(x = prcp, fill = name)) +
+  geom_density(alpha = .5)
+  theme(legend.position = "none")
+```
+
+    ## <theme> List of 1
+    ##  $ legend.position: chr "none"
+    ##  @ complete: logi FALSE
+    ##  @ validate: logi TRUE
+
+``` r
+tmax_date_p = 
+  weather_df |> 
+  ggplot(aes(x = date, y = tmax, color = name)) +
+  geom_point(alpha = .5) + 
+  geom_smooth(se = FALSE) + 
+  theme(legend.position = "bottom")
+
+tmax_tmin_p + prcp_dens_p
+```
+
+    ## Warning: Removed 17 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+![](viz_2_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+
+``` r
+tmax_tmin_p + prcp_dens_p + tmax_date_p
+```
+
+    ## Warning: Removed 17 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+    ## `geom_smooth()` using method = 'loess' and formula = 'y ~ x'
+
+    ## Warning: Removed 17 rows containing non-finite outside the scale range
+    ## (`stat_smooth()`).
+    ## Removed 17 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+![](viz_2_files/figure-gfm/unnamed-chunk-17-2.png)<!-- -->
+
+``` r
+tmax_tmin_p + (prcp_dens_p + tmax_date_p)
+```
+
+    ## Warning: Removed 17 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+    ## `geom_smooth()` using method = 'loess' and formula = 'y ~ x'
+
+    ## Warning: Removed 17 rows containing non-finite outside the scale range
+    ## (`stat_smooth()`).
+    ## Removed 17 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+![](viz_2_files/figure-gfm/unnamed-chunk-17-3.png)<!-- -->
+
+``` r
+(tmax_tmin_p + prcp_dens_p) / tmax_date_p
+```
+
+    ## Warning: Removed 17 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+    ## `geom_smooth()` using method = 'loess' and formula = 'y ~ x'
+
+    ## Warning: Removed 17 rows containing non-finite outside the scale range
+    ## (`stat_smooth()`).
+    ## Removed 17 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+![](viz_2_files/figure-gfm/unnamed-chunk-17-4.png)<!-- -->
