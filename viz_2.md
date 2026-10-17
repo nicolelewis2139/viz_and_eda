@@ -20,6 +20,7 @@ library(tidyverse)
 
 ``` r
 library(patchwork)
+library(dplyr)
 ```
 
 ## Load the weather data
@@ -248,6 +249,37 @@ ggp_temp_plot +
 
 ![](viz_2_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
+Learning assessment: Revisit the plot showing tmax against data for each
+location.Use labels, scale options, and theme changes to improve the
+readability of this plot.
+
+``` r
+weather_df |> 
+  ggplot(aes(x = date, y = tmax, color = name)) +
+  geom_smooth(se = FALSE) +
+  geom_point(aes(size = prcp), alpha = .75) +
+  labs(
+    title = "Temperature plot", 
+    x = "Date", 
+    y = "Maximum daily temperature (ºC)", 
+    color = "Location", 
+    caption = "Data from the rnoaa package"
+  ) +
+  viridis::scale_color_viridis(discrete = TRUE) +
+  theme_minimal() + 
+  theme(legend.position = "bottom")
+```
+
+    ## `geom_smooth()` using method = 'loess' and formula = 'y ~ x'
+
+    ## Warning: Removed 17 rows containing non-finite outside the scale range
+    ## (`stat_smooth()`).
+
+    ## Warning: Removed 19 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+![](viz_2_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
 ## Setting options
 
 ``` r
@@ -289,7 +321,7 @@ ggplot(data = molokai_df, aes(x = date, y = tmax, color = name)) +
     ## Warning: Removed 1 row containing missing values or values outside the scale range
     ## (`geom_point()`).
 
-![](viz_2_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](viz_2_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 ## `patchwork`
 
@@ -305,7 +337,7 @@ facet_grid(. ~ name)
     ## Warning: Removed 17 rows containing non-finite outside the scale range
     ## (`stat_density()`).
 
-![](viz_2_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](viz_2_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 What happens when you want multipanel plots but can’t facet?
 
@@ -343,7 +375,7 @@ tmax_tmin_p + prcp_dens_p
     ## Warning: Removed 17 rows containing missing values or values outside the scale range
     ## (`geom_point()`).
 
-![](viz_2_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](viz_2_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 ``` r
 tmax_tmin_p + prcp_dens_p + tmax_date_p
@@ -359,7 +391,7 @@ tmax_tmin_p + prcp_dens_p + tmax_date_p
     ## Removed 17 rows containing missing values or values outside the scale range
     ## (`geom_point()`).
 
-![](viz_2_files/figure-gfm/unnamed-chunk-17-2.png)<!-- -->
+![](viz_2_files/figure-gfm/unnamed-chunk-18-2.png)<!-- -->
 
 ``` r
 tmax_tmin_p + (prcp_dens_p + tmax_date_p)
@@ -375,7 +407,7 @@ tmax_tmin_p + (prcp_dens_p + tmax_date_p)
     ## Removed 17 rows containing missing values or values outside the scale range
     ## (`geom_point()`).
 
-![](viz_2_files/figure-gfm/unnamed-chunk-17-3.png)<!-- -->
+![](viz_2_files/figure-gfm/unnamed-chunk-18-3.png)<!-- -->
 
 ``` r
 (tmax_tmin_p + prcp_dens_p) / tmax_date_p
@@ -391,7 +423,7 @@ tmax_tmin_p + (prcp_dens_p + tmax_date_p)
     ## Removed 17 rows containing missing values or values outside the scale range
     ## (`geom_point()`).
 
-![](viz_2_files/figure-gfm/unnamed-chunk-17-4.png)<!-- -->
+![](viz_2_files/figure-gfm/unnamed-chunk-18-4.png)<!-- -->
 
 ## Data manipulation
 
@@ -404,7 +436,7 @@ weather_df |>
     ## Warning: Removed 17 rows containing non-finite outside the scale range
     ## (`stat_ydensity()`).
 
-![](viz_2_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+![](viz_2_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 Control your factors. If you want to change the order (reorder
 categorical predictor on X axis)
@@ -425,7 +457,7 @@ weather_df |>
     ## Warning: Removed 17 rows containing non-finite outside the scale range
     ## (`stat_ydensity()`).
 
-![](viz_2_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+![](viz_2_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
 
 Option 2; specify exact order you want
 
@@ -443,7 +475,7 @@ weather_df |>
     ## Warning: Removed 17 rows containing non-finite outside the scale range
     ## (`stat_ydensity()`).
 
-![](viz_2_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+![](viz_2_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
 
 Option 3; reorders name according to tmax values in each name (place)
 -sorts from lowest to highest tmax (based on each place’s median temp
@@ -467,7 +499,7 @@ weather_df |>
     ## Warning: Removed 17 rows containing non-finite outside the scale range
     ## (`stat_ydensity()`).
 
-![](viz_2_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+![](viz_2_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
 
 What if I wanted densities for tmin and tmax simultaneously?
 
@@ -484,7 +516,7 @@ weather_df |>
   geom_density(alpha = .5) 
 ```
 
-![](viz_2_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+![](viz_2_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
 
 Makes density plots with tmin and tmax for each place (one panel per
 place)
@@ -503,7 +535,7 @@ weather_df |>
     ## Warning: Removed 34 rows containing non-finite outside the scale range
     ## (`stat_density()`).
 
-![](viz_2_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+![](viz_2_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
 
 Makes density plots with tmin and tmax for each place (one panel per
 place), with viridis colour scheme
@@ -524,4 +556,177 @@ weather_df |>
     ## Warning: Removed 34 rows containing non-finite outside the scale range
     ## (`stat_density()`).
 
-![](viz_2_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
+![](viz_2_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
+
+## Revisit the pups
+
+Data from the FAS study.
+
+Import, tidying, and plotting steps \[following 2 chunks do the same\]
+
+From class:
+
+``` r
+pups_data = 
+  read_csv("./data/FAS_pups.csv", na = c("NA", ".", ""), skip = 3) |> 
+  janitor::clean_names() |> 
+  mutate(
+    sex = 
+      case_match(
+        sex, 
+        1 ~ "male", 
+        2 ~ "female"))
+```
+
+    ## Rows: 313 Columns: 6
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (1): Litter Number
+    ## dbl (5): Sex, PD ears, PD eyes, PD pivot, PD walk
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+    ## Warning: There was 1 warning in `mutate()`.
+    ## ℹ In argument: `sex = case_match(sex, 1 ~ "male", 2 ~ "female")`.
+    ## Caused by warning:
+    ## ! `case_match()` was deprecated in dplyr 1.2.0.
+    ## ℹ Please use `recode_values()` instead.
+
+``` r
+litters_data = 
+  read_csv("./data/FAS_litters.csv", na = c("NA", ".", "")) |> 
+  janitor::clean_names() |> 
+  separate(group, into = c("dose", "day_of_tx"), sep = 3)
+```
+
+    ## Rows: 49 Columns: 8
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (2): Group, Litter Number
+    ## dbl (6): GD0 weight, GD18 weight, GD of Birth, Pups born alive, Pups dead @ ...
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+fas_data = left_join(pups_data, litters_data, by = "litter_number")
+
+fas_data |> 
+  ggplot(aes(x = dose, y = pd_ears)) +
+  geom_violin() +
+  facet_grid(. ~ day_of_tx)
+```
+
+    ## Warning: Removed 18 rows containing non-finite outside the scale range
+    ## (`stat_ydensity()`).
+
+![](viz_2_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
+
+``` r
+fas_data |> 
+  select(sex, dose, day_of_tx, starts_with("pd_")) |> 
+  pivot_longer(
+    pd_ears:pd_walk, 
+    names_to = "outcome", 
+    values_to = "pn_day"
+  ) |> 
+  drop_na() |> 
+  mutate(outcome = forcats::fct_reorder(outcome, pn_day, median)) |> 
+  ggplot(aes(x = dose, y = pn_day)) +
+  geom_violin() +
+  facet_grid(day_of_tx ~ outcome)
+```
+
+![](viz_2_files/figure-gfm/unnamed-chunk-26-2.png)<!-- -->
+
+From video:
+
+``` r
+pups_data = 
+  read_csv("./data/FAS_pups.csv", na = c("NA", ".", ""), skip = 3) |> 
+  janitor::clean_names() |> 
+  mutate(sex = recode(sex, `1` = "male", `2` = "female"))
+```
+
+    ## Rows: 313 Columns: 6
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (1): Litter Number
+    ## dbl (5): Sex, PD ears, PD eyes, PD pivot, PD walk
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+litters_data = 
+  read_csv("./data/FAS_litters.csv", na = c("NA", ".", "")) |> 
+  janitor::clean_names() |> 
+  separate(group, into = c("dose", "day_of_tx"), sep = 3)
+```
+
+    ## Rows: 49 Columns: 8
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (2): Group, Litter Number
+    ## dbl (6): GD0 weight, GD18 weight, GD of Birth, Pups born alive, Pups dead @ ...
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+fas_data = left_join(pups_data, litters_data, by = "litter_number")
+
+fas_data |> 
+  ggplot(aes(x = dose, y = pd_ears)) +
+  geom_violin() +
+  facet_grid(. ~ day_of_tx)
+```
+
+    ## Warning: Removed 18 rows containing non-finite outside the scale range
+    ## (`stat_ydensity()`).
+
+![](viz_2_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
+
+``` r
+fas_data |> 
+  select(dose, day_of_tx, starts_with("pd_")) |> 
+  pivot_longer(
+    pd_ears:pd_walk, 
+    names_to = "outcome", 
+    values_to = "pn_day"
+  ) |> 
+  drop_na() |> 
+  mutate(outcome = forcats::fct_relevel(outcome, "pd_ears", "pd_pivot", "pd_walk", "pd_eyes")) |> 
+  ggplot(aes(x = dose, y = pn_day)) +
+  geom_violin() +
+  facet_grid(day_of_tx ~ outcome)
+```
+
+![](viz_2_files/figure-gfm/unnamed-chunk-27-2.png)<!-- -->
+
+Pulse data example
+
+``` r
+pulse_data = 
+  haven::read_sas("./data/public_pulse_data.sas7bdat") |> 
+  janitor::clean_names() |> 
+  pivot_longer(
+    bdi_score_bl:bdi_score_12m,
+    names_to = "visit", 
+    names_prefix = "bdi_score_", 
+    values_to = "bdi") |> 
+  select(id, visit, everything()) |> 
+  mutate(
+    visit = recode(visit, "bl" = "00m"), 
+    visit = factor(visit, levels = str_c(c("00", "01", "06", "12"), "m"))) |> 
+  arrange(id, visit)
+
+ggplot(pulse_data, aes(x = visit, y = bdi)) +
+  geom_boxplot()
+```
+
+    ## Warning: Removed 879 rows containing non-finite outside the scale range
+    ## (`stat_boxplot()`).
+
+![](viz_2_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
