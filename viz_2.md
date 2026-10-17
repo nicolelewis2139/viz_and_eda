@@ -392,3 +392,136 @@ tmax_tmin_p + (prcp_dens_p + tmax_date_p)
     ## (`geom_point()`).
 
 ![](viz_2_files/figure-gfm/unnamed-chunk-17-4.png)<!-- -->
+
+## Data manipulation
+
+``` r
+weather_df |> 
+  ggplot(aes(x = name, y = tmax, fill = name)) + 
+  geom_violin(alpha = .5)
+```
+
+    ## Warning: Removed 17 rows containing non-finite outside the scale range
+    ## (`stat_ydensity()`).
+
+![](viz_2_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+
+Control your factors. If you want to change the order (reorder
+categorical predictor on X axis)
+
+Option 1; just include Molokai_HI (makes this first), keeps rest in same
+order
+
+``` r
+weather_df |> 
+  mutate(
+    name = factor(name),
+    name = forcats::fct_relevel(name, c("Molokai_HI"))
+  ) |> 
+  ggplot(aes(x = name, y = tmax, fill = name)) + 
+  geom_violin(alpha = .5)
+```
+
+    ## Warning: Removed 17 rows containing non-finite outside the scale range
+    ## (`stat_ydensity()`).
+
+![](viz_2_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+
+Option 2; specify exact order you want
+
+``` r
+weather_df |> 
+  mutate(
+    name = factor(name),
+    name = forcats::fct_relevel(name, c("Molokai_HI", "CentralPark_NY", "Waterhole_WA"))
+  ) |> 
+  ggplot(aes(x = name, y = tmax)) + 
+  geom_violin(aes(fill = name), color = "blue", alpha = .5) +
+  theme(legend.position = "bottom")
+```
+
+    ## Warning: Removed 17 rows containing non-finite outside the scale range
+    ## (`stat_ydensity()`).
+
+![](viz_2_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+
+Option 3; reorders name according to tmax values in each name (place)
+-sorts from lowest to highest tmax (based on each place’s median temp
+value)
+
+``` r
+weather_df |> 
+  mutate(name = forcats::fct_reorder(name, tmax)) |> 
+  ggplot(aes(x = name, y = tmax)) +
+  geom_violin(aes(fill = name), colour = "blue", alpha = .5) +
+  theme(legend.position = "bottom")
+```
+
+    ## Warning: There was 1 warning in `mutate()`.
+    ## ℹ In argument: `name = forcats::fct_reorder(name, tmax)`.
+    ## Caused by warning:
+    ## ! `fct_reorder()` removing 17 missing values.
+    ## ℹ Use `.na_rm = TRUE` to silence this message.
+    ## ℹ Use `.na_rm = FALSE` to preserve NAs.
+
+    ## Warning: Removed 17 rows containing non-finite outside the scale range
+    ## (`stat_ydensity()`).
+
+![](viz_2_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+
+What if I wanted densities for tmin and tmax simultaneously?
+
+shows tmax and tmin values for central park NY
+
+``` r
+weather_df |> 
+  filter(name == "CentralPark_NY") |> 
+  pivot_longer(
+    tmax:tmin,
+    names_to = "observation", 
+    values_to = "temp") |> 
+  ggplot(aes(x = temp, fill = observation)) +
+  geom_density(alpha = .5) 
+```
+
+![](viz_2_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+
+Makes density plots with tmin and tmax for each place (one panel per
+place)
+
+``` r
+weather_df |> 
+  pivot_longer(
+    tmax:tmin,
+    names_to = "observation", 
+    values_to = "temp") |> 
+  ggplot(aes(x = temp, fill = observation)) +
+  geom_density(alpha = .5) +
+  facet_grid(. ~ name) 
+```
+
+    ## Warning: Removed 34 rows containing non-finite outside the scale range
+    ## (`stat_density()`).
+
+![](viz_2_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+
+Makes density plots with tmin and tmax for each place (one panel per
+place), with viridis colour scheme
+
+``` r
+weather_df |> 
+  select(name, tmax, tmin) |> 
+  pivot_longer(
+    tmax:tmin,
+    names_to = "observation", 
+    values_to = "temp") |> 
+  ggplot(aes(x = temp, fill = observation)) +
+  geom_density(alpha = .5) +
+  facet_grid(. ~ name) +
+  viridis::scale_fill_viridis(discrete = TRUE)
+```
+
+    ## Warning: Removed 34 rows containing non-finite outside the scale range
+    ## (`stat_density()`).
+
+![](viz_2_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->

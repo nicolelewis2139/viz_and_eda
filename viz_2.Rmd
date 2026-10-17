@@ -264,9 +264,96 @@ tmax_tmin_p + prcp_dens_p + tmax_date_p
 
 tmax_tmin_p + (prcp_dens_p + tmax_date_p)
 (tmax_tmin_p + prcp_dens_p) / tmax_date_p
-
-
 ```
+
+
+## Data manipulation 
+
+```{r}
+weather_df |> 
+  ggplot(aes(x = name, y = tmax, fill = name)) + 
+  geom_violin(alpha = .5)
+```
+
+Control your factors.
+If you want to change the order (reorder categorical predictor on X axis)
+
+Option 1; just include Molokai_HI (makes this first), keeps rest in same order
+```{r}
+weather_df |> 
+  mutate(
+    name = factor(name),
+    name = forcats::fct_relevel(name, c("Molokai_HI"))
+  ) |> 
+  ggplot(aes(x = name, y = tmax, fill = name)) + 
+  geom_violin(alpha = .5)
+```
+
+Option 2; specify exact order you want 
+
+```{r}
+weather_df |> 
+  mutate(
+    name = factor(name),
+    name = forcats::fct_relevel(name, c("Molokai_HI", "CentralPark_NY", "Waterhole_WA"))
+  ) |> 
+  ggplot(aes(x = name, y = tmax)) + 
+  geom_violin(aes(fill = name), color = "blue", alpha = .5) +
+  theme(legend.position = "bottom")
+```
+
+Option 3; reorders name according to tmax values in each name (place)
+-sorts from lowest to highest tmax (based on each place's median temp value)
+```{r}
+weather_df |> 
+  mutate(name = forcats::fct_reorder(name, tmax)) |> 
+  ggplot(aes(x = name, y = tmax)) +
+  geom_violin(aes(fill = name), colour = "blue", alpha = .5) +
+  theme(legend.position = "bottom")
+```
+
+
+
+What if I wanted densities for tmin and tmax simultaneously? 
+
+shows tmax and tmin values for central park NY 
+```{r}
+weather_df |> 
+  filter(name == "CentralPark_NY") |> 
+  pivot_longer(
+    tmax:tmin,
+    names_to = "observation", 
+    values_to = "temp") |> 
+  ggplot(aes(x = temp, fill = observation)) +
+  geom_density(alpha = .5) 
+```
+
+Makes density plots with tmin and tmax for each place (one panel per place)
+```{r}
+weather_df |> 
+  pivot_longer(
+    tmax:tmin,
+    names_to = "observation", 
+    values_to = "temp") |> 
+  ggplot(aes(x = temp, fill = observation)) +
+  geom_density(alpha = .5) +
+  facet_grid(. ~ name) 
+```
+
+Makes density plots with tmin and tmax for each place (one panel per place), with viridis colour scheme
+```{r}
+weather_df |> 
+  select(name, tmax, tmin) |> 
+  pivot_longer(
+    tmax:tmin,
+    names_to = "observation", 
+    values_to = "temp") |> 
+  ggplot(aes(x = temp, fill = observation)) +
+  geom_density(alpha = .5) +
+  facet_grid(. ~ name) +
+  viridis::scale_fill_viridis(discrete = TRUE)
+```
+
 
 
 
